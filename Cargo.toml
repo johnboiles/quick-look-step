@@ -1,0 +1,8 @@
+[workspace]
+members = ["ffi"]
+
+[patch.crates-io]
+triangulate = { path = "foxtrot/triangulate" }
+step        = { path = "foxtrot/step" }
+nurbs       = { path = "foxtrot/nurbs" }
+cdt         = { path = "foxtrot/cdt" }
