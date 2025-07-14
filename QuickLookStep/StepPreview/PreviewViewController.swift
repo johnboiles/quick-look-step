@@ -85,7 +85,7 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         let geometry = SCNGeometry(sources: [vertexSource], elements: [geometryElement])
         geometry.firstMaterial = SCNMaterial()
         geometry.firstMaterial?.lightingModel = .blinn
-        geometry.firstMaterial?.diffuse.contents = NSColor.systemTeal
+        geometry.firstMaterial?.diffuse.contents = NSColor.white
         geometry.firstMaterial?.isDoubleSided = true
 
         // Add geometry to scene
@@ -128,8 +128,23 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         let lightNode = SCNNode()
         lightNode.light = SCNLight()
         lightNode.light?.type = .omni
+        lightNode.light?.intensity = 850
         lightNode.position = cameraNode.position
         scene.rootNode.addChildNode(lightNode)
+
+        let lightNode2 = SCNNode()
+        lightNode2.light = SCNLight()
+        lightNode2.light?.type = .omni
+        lightNode2.light?.intensity = 700
+        lightNode2.position = SCNVector3(0, 0, -targetSize * 2)
+        scene.rootNode.addChildNode(lightNode2)
+
+        let ambientNode = SCNNode()
+        ambientNode.light = SCNLight()
+        ambientNode.light!.type  = .ambient
+        ambientNode.light!.color = NSColor(white: 1, alpha: 1.0) // raise/lower to taste
+        ambientNode.light!.intensity = 300
+        scene.rootNode.addChildNode(ambientNode)
 
         scnView.scene = scene
 
