@@ -6,3 +6,6 @@ triangulate = { path = "foxtrot/triangulate" }
 step        = { path = "foxtrot/step" }
 nurbs       = { path = "foxtrot/nurbs" }
 cdt         = { path = "foxtrot/cdt" }
+
+[profile.release]
+panic = "unwind"

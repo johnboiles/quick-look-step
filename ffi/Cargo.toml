@@ -9,3 +9,6 @@ crate-type = ["staticlib"]
 [dependencies]
 triangulate = { version = "0.1", default-features = false }
 step = { version = "0.1", default-features = false }
+
+[profile.release]
+panic = "unwind"

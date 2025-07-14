@@ -1,5 +1,6 @@
 use std::ffi::CStr;
 use std::os::raw::c_char;
+use std::panic::{catch_unwind, AssertUnwindSafe};
 
 // Triangulation + STEP parsing crates
 use triangulate::triangulate::triangulate;
@@ -52,32 +53,40 @@ pub struct MeshSlice<'a> {
 pub extern "C" fn foxtrot_load_step(
     path: *const c_char,
     out_mesh: *mut MeshSlice<'_>,
-) -> bool
-{
-    // SAFETY: caller passes a valid, NUL‑terminated UTF‑8 C string.
-    let c_str = unsafe { CStr::from_ptr(path) };
-    let Ok(path) = c_str.to_str() else { return false };
+) -> bool {
+    // Wrap the whole body in a panic catcher so that Rust panics don't unwind
+    // across the FFI boundary (which would abort the process). Any panic or
+    // normal error will result in `false` being returned to the caller.
+    let result = catch_unwind(AssertUnwindSafe(|| {
+        // SAFETY: caller passes a valid, NUL-terminated UTF-8 C string.
+        let c_str = unsafe { CStr::from_ptr(path) };
+        let Ok(path) = c_str.to_str() else { return false };
 
-    // Your triangulate helper – adjust to real API.
-    match load_step_mesh(path) {
-        Ok((vertices, normals, indices)) => {
-            let slice = MeshSlice {
-                verts:       vertices.as_ptr(),
-                normals:     normals.as_ptr(),
-                tris:        indices.as_ptr(),
-                vert_count:  vertices.len() / 3,
-                tri_count:   indices.len()  / 3,
-                _phantom:    std::marker::PhantomData,
-            };
-            unsafe { *out_mesh = slice };
+        match load_step_mesh(path) {
+            Ok((vertices, normals, indices)) => {
+                let slice = MeshSlice {
+                    verts:       vertices.as_ptr(),
+                    normals:     normals.as_ptr(),
+                    tris:        indices.as_ptr(),
+                    vert_count:  vertices.len() / 3,
+                    tri_count:   indices.len()  / 3,
+                    _phantom:    std::marker::PhantomData,
+                };
+                unsafe { *out_mesh = slice };
 
-            // Hand ownership to the caller (SceneKit).  Prevent Rust drop.
-            std::mem::forget(vertices);
-            std::mem::forget(normals);
-            std::mem::forget(indices);
-            true
+                // Hand ownership to the caller (SceneKit). Prevent Rust drop.
+                std::mem::forget(vertices);
+                std::mem::forget(normals);
+                std::mem::forget(indices);
+                true
+            }
+            Err(_) => false,
         }
-        Err(_) => false,
+    }));
+
+    match result {
+        Ok(v) => v,
+        Err(_) => false, // a panic occurred
     }
 }
 
