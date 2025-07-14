@@ -15,6 +15,9 @@
 		42EF487C2E25818200C63E21 /* libfoxtrot_universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 42EF487B2E25818200C63E21 /* libfoxtrot_universal.a */; };
 		42EF487D2E25818200C63E21 /* libfoxtrot_universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 42EF487B2E25818200C63E21 /* libfoxtrot_universal.a */; };
 		42EF487E2E25818200C63E21 /* libfoxtrot_universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 42EF487B2E25818200C63E21 /* libfoxtrot_universal.a */; };
+		42EF489F2E25C9A300C63E21 /* SceneBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EF489E2E25C9A300C63E21 /* SceneBuilder.swift */; };
+		42EF48A02E25C9A300C63E21 /* SceneBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EF489E2E25C9A300C63E21 /* SceneBuilder.swift */; };
+		42EF48A12E25C9A300C63E21 /* SceneBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EF489E2E25C9A300C63E21 /* SceneBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +61,7 @@
 		42EF487A2E25818200C63E21 /* foxtrot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foxtrot.h; sourceTree = "<group>"; };
 		42EF487B2E25818200C63E21 /* libfoxtrot_universal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfoxtrot_universal.a; sourceTree = "<group>"; };
 		42EF487F2E25824600C63E21 /* Shared-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shared-Bridging-Header.h"; sourceTree = "<group>"; };
+		42EF489E2E25C9A300C63E21 /* SceneBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneBuilder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -141,6 +145,7 @@
 				42E196DA2E25781D009F11FB /* Frameworks */,
 				42E196C72E2577BA009F11FB /* Products */,
 				42EF487F2E25824600C63E21 /* Shared-Bridging-Header.h */,
+				42EF489E2E25C9A300C63E21 /* SceneBuilder.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -308,6 +313,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42EF48A02E25C9A300C63E21 /* SceneBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +321,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42EF489F2E25C9A300C63E21 /* SceneBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,6 +329,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42EF48A12E25C9A300C63E21 /* SceneBuilder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,6 +409,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Shared-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -458,6 +467,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "Shared-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -609,7 +619,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Shared-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -640,7 +649,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "Shared-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

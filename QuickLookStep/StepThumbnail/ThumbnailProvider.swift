@@ -6,46 +6,45 @@
 //
 
 import QuickLookThumbnailing
+import SceneKit
+import Cocoa
+import Metal
 
 class ThumbnailProvider: QLThumbnailProvider {
-    
     override func provideThumbnail(for request: QLFileThumbnailRequest, _ handler: @escaping (QLThumbnailReply?, Error?) -> Void) {
-        
-        // There are three ways to provide a thumbnail through a QLThumbnailReply. Only one of them should be used.
-        
-        // First way: Draw the thumbnail into the current context, set up with UIKit's coordinate system.
-        handler(QLThumbnailReply(contextSize: request.maximumSize, currentContextDrawing: { () -> Bool in
-            // Draw the thumbnail here.
-            
-            // Return true if the thumbnail was successfully drawn inside this block.
-            return true
-        }), nil)
-        
-        /*
-        
-        // Second way: Draw the thumbnail into a context passed to your block, set up with Core Graphics's coordinate system.
-        handler(QLThumbnailReply(contextSize: request.maximumSize, drawing: { (context) -> Bool in
-            // Draw the thumbnail here.
-         
-            // Return true if the thumbnail was successfully drawn inside this block.
-            return true
-        }), nil)
-         
-        // Third way: Set an image file URL.
-        handler(QLThumbnailReply(imageFileURL: Bundle.main.url(forResource: "fileThumbnail", withExtension: "jpg")!), nil)
-        
-        */
-        
-        // GPT's code
-//        // Reuse exactly the same Rust → SceneKit pipeline,
-//        // but render off‑screen at request.maximumSize:
-//        let reply = QLThumbnailReply(contextSize: request.maximumSize) { ctx in
-//            // scene.snapshot() is Metal‑backed and GPU quick.
-//            let image = scnView.snapshot()
-//            image.draw(in: CGRect(origin: .zero, size: request.maximumSize))
-//            return true
-//        }
-//        handler(reply, nil)
-//        return Progress(totalUnitCount: 1)
+        // We perform heavy work off the main thread.
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                // Build the scene using the shared helper.
+                let scene = try SceneBuilder.scene(for: request.fileURL)
+
+                // Set up an off-screen SceneKit renderer.
+                let renderer = SCNRenderer(device: MTLCreateSystemDefaultDevice(), options: nil)
+                renderer.scene = scene
+                renderer.pointOfView = scene.rootNode.childNode(withName: "camera", recursively: true)
+
+                let pointSize = request.maximumSize
+                let scale = CGFloat(request.scale)
+                let pixelSize = CGSize(width: pointSize.width * scale, height: pointSize.height * scale)
+
+                let t0 = CFAbsoluteTimeGetCurrent()
+                let image = renderer.snapshot(atTime: 0, with: pixelSize, antialiasingMode: .multisampling4X)
+                let snapshotMs = (CFAbsoluteTimeGetCurrent() - t0) * 1000.0
+                NSLog("renderer.snapshot finished in %.2f ms", snapshotMs)
+
+                guard let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+                    throw NSError(domain: "ThumbnailProvider", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to create CGImage from snapshot"])
+                }
+
+                let reply = QLThumbnailReply(contextSize: pointSize, drawing: { ctx -> Bool in
+                    ctx.draw(cgImage, in: CGRect(origin: .zero, size: pixelSize))
+                    return true
+                })
+
+                handler(reply, nil)
+            } catch {
+                handler(nil, error)
+            }
+        }
     }
 }
