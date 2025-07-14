@@ -14,3 +14,13 @@ libfoxtrot_universal.a:
 .PHONY: test-foxtrot
 test-foxtrot:
 	cd foxtrot && cargo run --release -- examples/cube_hole.step
+
+.PHONY: xcodebuild
+xcodebuild:
+	xcodebuild \
+	  -project QuickLookStep/QuickLookStep.xcodeproj \
+	  -scheme QuickLookStep \
+	  -configuration Release \
+	  -destination 'generic/platform=macOS' \
+	  -derivedDataPath build \
+	  build
