@@ -122,7 +122,11 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         camera.zFar = 10000
         camera.fieldOfView = 45
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3(0, 0, targetSize * 2) // stay behind model
+        // Position the camera above and to the side to give a more useful default perspective (similar to the built-in STL Quick Look)
+        let cameraDistance = targetSize
+        cameraNode.position = SCNVector3(cameraDistance, cameraDistance * 0.5, cameraDistance)
+        // Make sure the camera is aimed at the center of the scene (origin)
+        cameraNode.look(at: SCNVector3(0, 0, 0))
         scene.rootNode.addChildNode(cameraNode)
         
         let lightNode = SCNNode()
