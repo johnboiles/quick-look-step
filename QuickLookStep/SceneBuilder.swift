@@ -109,7 +109,7 @@ enum SceneBuilder {
         let sx = Float(size.x), sy = Float(size.y), sz = Float(size.z)
         let radius = (sqrt(sx*sx + sy*sy + sz*sz) / 2.0) * sf
         let fovRadians = (Float(camera.fieldOfView) / 2.0) * (.pi / 180.0)
-        let distance = radius / tanf(fovRadians) * 1.2 // 20% margin
+        let distance = radius / tanf(fovRadians)
 
         // Use a diagonal viewing direction for depth.
         cameraNode.position = SCNVector3(distance, distance, distance)
