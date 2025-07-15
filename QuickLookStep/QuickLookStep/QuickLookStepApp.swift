@@ -11,7 +11,7 @@ import SwiftUI
 struct QuickLookStepApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            QuickLookStepHostView()
         }
     }
 }
