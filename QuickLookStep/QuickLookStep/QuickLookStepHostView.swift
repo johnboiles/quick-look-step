@@ -68,6 +68,11 @@ struct QuickLookStepHostView: View {
             return true
         }
         .background(isTargeted ? Color.accentColor.opacity(0.2) : Color.clear)
+        // Respond when the app is launched/opened with a file (Finder double-click, `open` CLI, etc.)
+        .onOpenURL { url in
+            guard url.isFileURL else { return }
+            loadStep(url)
+        }
     }
 
     // MARK: - Loading & snapshot

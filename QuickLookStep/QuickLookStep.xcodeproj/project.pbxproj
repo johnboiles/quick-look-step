@@ -65,6 +65,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		427CF4A62E26F69F00506A27 /* Exceptions for "QuickLookStep" folder in "QuickLookStep" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 42E196C52E2577BA009F11FB /* QuickLookStep */;
+		};
 		42E196E72E25781E009F11FB /* Exceptions for "StepThumbnail" folder in "StepThumbnail" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -84,6 +91,9 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		42E196C82E2577BA009F11FB /* QuickLookStep */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				427CF4A62E26F69F00506A27 /* Exceptions for "QuickLookStep" folder in "QuickLookStep" target */,
+			);
 			path = QuickLookStep;
 			sourceTree = "<group>";
 		};
@@ -484,6 +494,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = QuickLookStep/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -515,6 +526,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = QuickLookStep/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
