@@ -13,11 +13,14 @@ enum SceneBuilder {
     /// - Throws: An `NSError` if the STEP file cannot be parsed by the Rust
     ///           backend.
     static func scene(for url: URL) throws -> SCNScene {
-        // Load mesh data through the Rust FFI.
+        // --- Load via FFI and measure duration ---
         var mesh = MeshSlice()
+        let start = CFAbsoluteTimeGetCurrent()
         let ok = url.path.withCString { cPath in
             foxtrot_load_step(cPath, &mesh)
         }
+        let elapsedMs = (CFAbsoluteTimeGetCurrent() - start) * 1000.0
+        NSLog("foxtrot_load_step(%@) -> %@ in %.2f ms", url.path, ok ? "OK" : "FAIL", elapsedMs)
         guard ok else {
             throw NSError(
                 domain: "SceneBuilder",
@@ -68,29 +71,30 @@ enum SceneBuilder {
         let node = SCNNode(geometry: geometry)
         scene.rootNode.addChildNode(node)
 
-        // --- Normalise size & centre the model ---
+        // --- Scale & centre geometry ---
         let (minBounds, maxBounds) = node.boundingBox
         let size = SCNVector3(
             maxBounds.x - minBounds.x,
             maxBounds.y - minBounds.y,
             maxBounds.z - minBounds.z
         )
+
+        // Uniformly scale so the largest dimension maps to `targetSize` units.
+        let targetSize: CGFloat = 100.0
         let maxExtent = max(size.x, max(size.y, size.z))
-        let targetSize: Float = 100.0
-        let scaleFactor = CGFloat(targetSize) / CGFloat(maxExtent)
+        let scaleFactor = targetSize / maxExtent
         let sf = Float(scaleFactor)
         node.scale = SCNVector3(sf, sf, sf)
 
+        // Re-centre so model origin is at (0,0,0)
         let center = SCNVector3(
             (maxBounds.x + minBounds.x) / 2.0,
             (maxBounds.y + minBounds.y) / 2.0,
             (maxBounds.z + minBounds.z) / 2.0
         )
-        node.position = SCNVector3(
-            CGFloat(-center.x) * scaleFactor,
-            CGFloat(-center.y) * scaleFactor,
-            CGFloat(-center.z) * scaleFactor
-        )
+        node.position = SCNVector3(Float(-center.x * scaleFactor),
+                                   Float(-center.y * scaleFactor),
+                                   Float(-center.z * scaleFactor))
 
         // --- Camera setup ---
         let cameraNode = SCNNode()
@@ -101,9 +105,15 @@ enum SceneBuilder {
         camera.fieldOfView = 45
         cameraNode.camera = camera
 
-        let cameraDistance = targetSize
-        cameraNode.position = SCNVector3(cameraDistance, cameraDistance * 0.5, cameraDistance)
-        cameraNode.look(at: SCNVector3(0, 0, 0))
+        // Place camera so the entire bounding sphere fits inside the view.
+        let sx = Float(size.x), sy = Float(size.y), sz = Float(size.z)
+        let radius = (sqrt(sx*sx + sy*sy + sz*sz) / 2.0) * sf
+        let fovRadians = (Float(camera.fieldOfView) / 2.0) * (.pi / 180.0)
+        let distance = radius / tanf(fovRadians) * 1.2 // 20% margin
+
+        // Use a diagonal viewing direction for depth.
+        cameraNode.position = SCNVector3(distance, distance, distance)
+        cameraNode.look(at: SCNVector3Zero)
         scene.rootNode.addChildNode(cameraNode)
 
         // --- Lighting ---
