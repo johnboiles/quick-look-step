@@ -49,6 +49,42 @@ enum SceneBuilder {
             dataStride: 3 * MemoryLayout<Float>.size
         )
 
+        var sources = [vertexSource]
+        if let normals = mesh.normals {
+            let normalData = Data(
+                bytes: normals,
+                count: vertexCount * 3 * MemoryLayout<Float>.size
+            )
+            sources.append(SCNGeometrySource(
+                data: normalData,
+                semantic: .normal,
+                vectorCount: vertexCount,
+                usesFloatComponents: true,
+                componentsPerVector: 3,
+                bytesPerComponent: MemoryLayout<Float>.size,
+                dataOffset: 0,
+                dataStride: 3 * MemoryLayout<Float>.size
+            ))
+        }
+        // Per-vertex colours from the STEP styling. SceneKit multiplies them
+        // with the (white) diffuse colour below.
+        if let colors = mesh.colors {
+            let colorData = Data(
+                bytes: colors,
+                count: vertexCount * 3 * MemoryLayout<Float>.size
+            )
+            sources.append(SCNGeometrySource(
+                data: colorData,
+                semantic: .color,
+                vectorCount: vertexCount,
+                usesFloatComponents: true,
+                componentsPerVector: 3,
+                bytesPerComponent: MemoryLayout<Float>.size,
+                dataOffset: 0,
+                dataStride: 3 * MemoryLayout<Float>.size
+            ))
+        }
+
         let indexData = Data(
             bytes: mesh.tris!,
             count: indexCount * MemoryLayout<UInt32>.size
@@ -60,7 +96,7 @@ enum SceneBuilder {
             bytesPerIndex: MemoryLayout<UInt32>.size
         )
 
-        let geometry = SCNGeometry(sources: [vertexSource], elements: [geometryElement])
+        let geometry = SCNGeometry(sources: sources, elements: [geometryElement])
         geometry.firstMaterial = SCNMaterial()
         geometry.firstMaterial?.lightingModel = .blinn
         geometry.firstMaterial?.diffuse.contents = NSColor.white

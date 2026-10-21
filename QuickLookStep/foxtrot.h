@@ -6,6 +6,7 @@
 typedef struct MeshSlice {
   const float *verts;
   const float *normals;
+  const float *colors;
   const uint32_t *tris;
   uintptr_t vert_count;
   uintptr_t tri_count;
