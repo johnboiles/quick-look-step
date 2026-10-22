@@ -16,8 +16,11 @@
 		42EF487D2E25818200C63E21 /* libfoxtrot_universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 42EF487B2E25818200C63E21 /* libfoxtrot_universal.a */; };
 		42EF487E2E25818200C63E21 /* libfoxtrot_universal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 42EF487B2E25818200C63E21 /* libfoxtrot_universal.a */; };
 		42EF489F2E25C9A300C63E21 /* SceneBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EF489E2E25C9A300C63E21 /* SceneBuilder.swift */; };
+		42EF48A32E25C9A300C63E21 /* VRMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EF48A22E25C9A300C63E21 /* VRMLParser.swift */; };
 		42EF48A02E25C9A300C63E21 /* SceneBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EF489E2E25C9A300C63E21 /* SceneBuilder.swift */; };
+		42EF48A42E25C9A300C63E21 /* VRMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EF48A22E25C9A300C63E21 /* VRMLParser.swift */; };
 		42EF48A12E25C9A300C63E21 /* SceneBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EF489E2E25C9A300C63E21 /* SceneBuilder.swift */; };
+		42EF48A52E25C9A300C63E21 /* VRMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42EF48A22E25C9A300C63E21 /* VRMLParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +65,7 @@
 		42EF487B2E25818200C63E21 /* libfoxtrot_universal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libfoxtrot_universal.a; sourceTree = "<group>"; };
 		42EF487F2E25824600C63E21 /* Shared-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shared-Bridging-Header.h"; sourceTree = "<group>"; };
 		42EF489E2E25C9A300C63E21 /* SceneBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneBuilder.swift; sourceTree = "<group>"; };
+		42EF48A22E25C9A300C63E21 /* VRMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VRMLParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -156,6 +160,7 @@
 				42E196C72E2577BA009F11FB /* Products */,
 				42EF487F2E25824600C63E21 /* Shared-Bridging-Header.h */,
 				42EF489E2E25C9A300C63E21 /* SceneBuilder.swift */,
+				42EF48A22E25C9A300C63E21 /* VRMLParser.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -324,6 +329,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				42EF48A02E25C9A300C63E21 /* SceneBuilder.swift in Sources */,
+				42EF48A42E25C9A300C63E21 /* VRMLParser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,6 +338,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				42EF489F2E25C9A300C63E21 /* SceneBuilder.swift in Sources */,
+				42EF48A32E25C9A300C63E21 /* VRMLParser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +347,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				42EF48A12E25C9A300C63E21 /* SceneBuilder.swift in Sources */,
+				42EF48A52E25C9A300C63E21 /* VRMLParser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

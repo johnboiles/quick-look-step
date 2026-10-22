@@ -13,6 +13,7 @@
 				<string>com.shapr3d.stp</string>
 				<string>a360.step</string>
 				<string>com.johnboiles.step</string>
+				<string>org.web3d.vrml</string>
 			</array>
 			<key>QLThumbnailMinimumDimension</key>
 			<integer>0</integer>

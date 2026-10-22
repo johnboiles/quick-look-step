@@ -5,7 +5,7 @@ import Metal
 import AppKit
 import UniformTypeIdentifiers
 
-/// Root UI used inside the demo host macOS app.  Drop a .step file to view it.
+/// Root UI used inside the demo host macOS app.  Drop a .step or .wrl file to view it.
 struct QuickLookStepHostView: View {
     @State private var scene: SCNScene? = nil
     @State private var loadError: String? = nil
@@ -17,7 +17,7 @@ struct QuickLookStepHostView: View {
                 SceneKitView(scene: scene)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                Text("Drop a STEP file")
+                Text("Drop a STEP or VRML file")
                     .font(.headline)
                     .foregroundStyle(.secondary)
             }

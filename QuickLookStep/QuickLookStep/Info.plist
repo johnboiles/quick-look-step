@@ -20,6 +20,22 @@
 			<key>NSDocumentClass</key>
 			<string></string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>VRML File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.web3d.vrml</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSDocumentClass</key>
+			<string></string>
+		</dict>
 	</array>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
@@ -71,6 +87,30 @@
 				<key>public.mime-type</key>
 				<array>
 					<string>model/step</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.3d-content</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>VRML 3D Model</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.web3d.vrml</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>wrl</string>
+					<string>WRL</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>model/vrml</string>
+					<string>x-world/x-vrml</string>
 				</array>
 			</dict>
 		</dict>
