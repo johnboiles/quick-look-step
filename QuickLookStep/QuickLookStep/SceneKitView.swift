@@ -12,7 +12,7 @@ struct SceneKitView: NSViewRepresentable {
         let scnView = SCNView()
         scnView.allowsCameraControl = true
         scnView.autoresizingMask = [.width, .height]
-        scnView.backgroundColor = .clear
+        scnView.backgroundColor = SceneBuilder.viewportBackgroundColor
         scnView.preferredFramesPerSecond = 60
         scnView.antialiasingMode = .multisampling4X
         scnView.autoenablesDefaultLighting = false // we set lighting in the scene builder
@@ -23,4 +23,4 @@ struct SceneKitView: NSViewRepresentable {
         nsView.scene = scene
         nsView.pointOfView = scene?.rootNode.childNode(withName: "camera", recursively: true)
     }
-} 
+}
