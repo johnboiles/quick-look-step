@@ -45,6 +45,10 @@ struct QuickLookStepHostView: View {
                         collected.append(url)
                     } else if let path = item as? String {
                         collected.append(URL(fileURLWithPath: path))
+                    } else if let data = item as? Data,
+                              let str = String(data: data, encoding: .utf8),
+                              let url = URL(string: str.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                        collected.append(url)
                     }
                 }
             }
@@ -96,5 +100,3 @@ struct QuickLookStepHostView: View {
         }
     }
 }
-
-// MARK: - Drag & Drop helper (legacy – unused) 

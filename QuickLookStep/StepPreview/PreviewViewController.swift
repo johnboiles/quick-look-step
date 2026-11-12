@@ -20,8 +20,9 @@ class PreviewViewController: NSViewController, QLPreviewingController {
     override func loadView() {
         super.loadView()
         scnView.allowsCameraControl = true
-        scnView.backgroundColor = .clear
-        scnView.autoenablesDefaultLighting = true
+        // Use an opaque background color to avoid transparent composite rendering failures on macOS 26+
+        scnView.backgroundColor = SceneBuilder.viewportBackgroundColor
+        scnView.autoenablesDefaultLighting = false
 
         addVersionWatermark()
     }
@@ -39,7 +40,13 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         // Build the scene using our shared helper so that the preview and
         // thumbnail use identical geometry, camera, and lighting.
         let scene = try SceneBuilder.scene(for: url)
-        scnView.scene = scene
+        await MainActor.run {
+            scnView.scene = scene
+            if let camera = scene.rootNode.childNode(withName: "camera", recursively: true) {
+                scnView.pointOfView = camera
+            }
+            scnView.needsDisplay = true
+        }
     }
 
     private func addVersionWatermark() {

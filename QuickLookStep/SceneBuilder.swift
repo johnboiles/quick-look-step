@@ -2,12 +2,14 @@ import SceneKit
 import Cocoa
 import Quartz
 
-
 /// A tiny helper that converts a STEP file into a ready-to-render `SCNScene`,
 /// replicating the same camera and lighting configuration we use in the preview
 /// extension so thumbnails and previews look identical before any user
 /// interaction.
 enum SceneBuilder {
+    /// Consistent opaque background color to ensure reliable compositing across macOS versions.
+    static let viewportBackgroundColor = NSColor(srgbRed: 0.14, green: 0.15, blue: 0.17, alpha: 1.0)
+
     /// Builds a SceneKit scene containing the geometry loaded from the STEP
     /// file at `url`.
     /// - Throws: An `NSError` if the STEP file cannot be parsed by the Rust
@@ -32,12 +34,21 @@ enum SceneBuilder {
 
         // Build SceneKit geometry from the raw buffers.
         let vertexCount = Int(mesh.vert_count)
-        let indexCount = Int(mesh.tri_count) * 3
+        let triCount = Int(mesh.tri_count)
+        guard vertexCount > 0, triCount > 0,
+              let vertsPtr = mesh.verts,
+              let trisPtr = mesh.tris else {
+            throw NSError(
+                domain: "SceneBuilder",
+                code: 2,
+                userInfo: [NSLocalizedDescriptionKey: "STEP file produced empty mesh"]
+            )
+        }
 
-        let vertexData = Data(
-            bytes: mesh.verts!,
-            count: vertexCount * 3 * MemoryLayout<Float>.size
-        )
+        let indexCount = triCount * 3
+        let vertexByteCount = vertexCount * 3 * MemoryLayout<Float>.size
+
+        let vertexData = Data(bytes: vertsPtr, count: vertexByteCount)
         let vertexSource = SCNGeometrySource(
             data: vertexData,
             semantic: .vertex,
@@ -49,18 +60,33 @@ enum SceneBuilder {
             dataStride: 3 * MemoryLayout<Float>.size
         )
 
-        let indexData = Data(
-            bytes: mesh.tris!,
-            count: indexCount * MemoryLayout<UInt32>.size
-        )
+        var sources: [SCNGeometrySource] = [vertexSource]
+
+        // Pass normal vectors when available so lighting models can shade curved surfaces properly.
+        if let normsPtr = mesh.normals {
+            let normalData = Data(bytes: normsPtr, count: vertexByteCount)
+            let normalSource = SCNGeometrySource(
+                data: normalData,
+                semantic: .normal,
+                vectorCount: vertexCount,
+                usesFloatComponents: true,
+                componentsPerVector: 3,
+                bytesPerComponent: MemoryLayout<Float>.size,
+                dataOffset: 0,
+                dataStride: 3 * MemoryLayout<Float>.size
+            )
+            sources.append(normalSource)
+        }
+
+        let indexData = Data(bytes: trisPtr, count: indexCount * MemoryLayout<UInt32>.size)
         let geometryElement = SCNGeometryElement(
             data: indexData,
             primitiveType: .triangles,
-            primitiveCount: Int(mesh.tri_count),
+            primitiveCount: triCount,
             bytesPerIndex: MemoryLayout<UInt32>.size
         )
 
-        let geometry = SCNGeometry(sources: [vertexSource], elements: [geometryElement])
+        let geometry = SCNGeometry(sources: sources, elements: [geometryElement])
         geometry.firstMaterial = SCNMaterial()
         geometry.firstMaterial?.lightingModel = .blinn
         geometry.firstMaterial?.diffuse.contents = NSColor.white
@@ -82,7 +108,7 @@ enum SceneBuilder {
         // Uniformly scale so the largest dimension maps to `targetSize` units.
         let targetSize: CGFloat = 100.0
         let maxExtent = max(size.x, max(size.y, size.z))
-        let scaleFactor = targetSize / maxExtent
+        let scaleFactor = maxExtent > 0 ? (targetSize / maxExtent) : 1.0
         let sf = Float(scaleFactor)
         node.scale = SCNVector3(sf, sf, sf)
 
@@ -109,7 +135,7 @@ enum SceneBuilder {
         let sx = Float(size.x), sy = Float(size.y), sz = Float(size.z)
         let radius = (sqrt(sx*sx + sy*sy + sz*sz) / 2.0) * sf
         let fovRadians = (Float(camera.fieldOfView) / 2.0) * (.pi / 180.0)
-        let distance = radius / tanf(fovRadians)
+        let distance = max(radius / tanf(fovRadians), 10.0)
 
         // Use a diagonal viewing direction for depth.
         cameraNode.position = SCNVector3(distance, distance, distance)
@@ -137,4 +163,4 @@ enum SceneBuilder {
 
         return scene
     }
-} 
+}
